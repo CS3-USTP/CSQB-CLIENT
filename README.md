@@ -16,4 +16,4 @@ Add C:/MinGW/bin to ENV path
 
 3. Compile app
 
-```g++ -o bin/Csqb.exe main.cpp asset/icon.o```
+```g++ -o bin/Csqb.exe src/main.cpp asset/icon.o```
