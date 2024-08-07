@@ -22,28 +22,31 @@ For more information, visit [Zrok](https://zrok.io/)
 
 ## Development
 
-1. Requirements
+1. Install [Scoop](https://scoop.sh/) (windows package manager)
+
+2. Install [Build Tools For Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
+
+3. Install MSVC and C++ CMake Tools for Windows
+
+![image](https://github.com/user-attachments/assets/43be30a7-32ce-48d2-a4f3-4f9e4c79a08d)
+  
+4. Install ming (g++ compiler) cmake (c++ builder) and vcpkg (c++ package manager)  
+
 ```
-Download MinGW v19 https://nuwen.net/mingw.html
-
-Extract to C:/MinGW
-
-Add C:/MinGW/bin to ENV path 
+scoop install mingw cmake vcpkg 
 ```
 
-2. Compile icon
-
+5. Compile icon
+   
 ```
 windres icon.rc -o icon.o
 ```
 
-
-3. Compile app
+6. Compile app
 
 ```
 g++ -o bin/Csqb.exe src/main.cpp asset/icon.o
 ```
-
 
 ## Future Works
 
