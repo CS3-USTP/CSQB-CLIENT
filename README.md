@@ -63,9 +63,9 @@ dotnet publish
 
 6. Create installer using cracked AdvanceInstaller software then open tools/CubeSetup.aip  
 
-6. Create a custom action, click 'installed' HostsFileOperations.dll and run IncludeServerDomain function on install and maintenance.
+6. Create a custom action, click 'installed' hostconf.dll and run IncludeServerDomain function on install and maintenance.
 
-7. Create a custom action, click 'installed' HostsFileOperations.dll and run ExcludeServerDomain function on uninstall.
+7. Create a custom action, click 'installed' hostconf.dll and run ExcludeServerDomain function on uninstall.
 
 ## Future Works
 
