@@ -1,10 +1,9 @@
 
-Open the `CSQB/bin` folder then run `Csqb.exe`
 
 
 ## Introduction
 
-CSQB is an abstracted tunneling client to access <i>Computer Science Student Society CS3</i> servers securely at minimum cost.
+Cube is a tunneling client to access <i>Computer Science Student Society CS3</i> servers called CSQB securely and at minimum cost.
 
 Using the client allows for encrypted services such as:
 - Custom DNS
@@ -24,29 +23,49 @@ For more information, visit [Zrok](https://zrok.io/)
 
 1. Install [Scoop](https://scoop.sh/) (windows package manager)
 
-2. Install [Build Tools For Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
-
-3. Install MSVC and C++ CMake Tools for Windows
-
-![image](https://github.com/user-attachments/assets/43be30a7-32ce-48d2-a4f3-4f9e4c79a08d)
-  
-4. Install ming (g++ compiler) cmake (c++ builder) and vcpkg (c++ package manager)  
+2. Install C# Software Development Kit (SDK)
 
 ```
-scoop install mingw cmake vcpkg 
+scoop install dotnet-sdk
 ```
 
-5. Compile icon
-   
-```
-windres icon.rc -o icon.o
-```
-
-6. Compile app
+3. Create a new dll
 
 ```
-g++ -o bin/Csqb.exe src/main.cpp asset/icon.o
+dotnet new classlib -o <folder/namespace>
 ```
+
+4. Create a new exe
+
+```
+dotnet new console -o <folder/namespace>
+```
+
+5. Build a single src folder for development
+
+```
+dotnet build
+```
+
+## Production
+
+1. Publish every src folder for production 
+
+```
+dotnet publish
+```
+
+2. Combine all publish and tools folder to `out` folder
+
+3. Delete *.pdb files (It exposes stack trace and can be reverse engineered)
+
+4. Rename *.exe file to Cube.exe
+
+6. Create installer using cracked AdvanceInstaller software then open tools/CubeSetup.aip  
+
+6. Create a custom action, click 'installed' HostsFileOperations.dll and run IncludeServerDomain function on install and maintenance.
+
+7. Create a custom action, click 'installed' HostsFileOperations.dll and run ExcludeServerDomain function on uninstall.
 
 ## Future Works
 

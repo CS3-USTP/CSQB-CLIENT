@@ -1,0 +1,12 @@
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\HostsFileManager.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\HostsFileManager.AssemblyInfoInputs.cache
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\HostsFileManager.AssemblyInfo.cs
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\HostsFileManager.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\HostsFileManager.sourcelink.json
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\bin\Release\net8.0\hostconf.deps.json
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\bin\Release\net8.0\hostconf.dll
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\bin\Release\net8.0\hostconf.pdb
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\hostconf.dll
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\refint\hostconf.dll
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\hostconf.pdb
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\obj\Release\net8.0\ref\hostconf.dll
