@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F90307AA-58E7-43A4-8ADE-58ABC0FB2518}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CubeClient", "src\CubeClient\CubeClient.csproj", "{A9E70F12-66B0-4A50-BFB6-2ED59AC2E35B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostsFileManager", "src\HostsFileManager\HostsFileManager.csproj", "{CFB86E7C-B825-447E-9215-23719D21A8FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9E70F12-66B0-4A50-BFB6-2ED59AC2E35B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E70F12-66B0-4A50-BFB6-2ED59AC2E35B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E70F12-66B0-4A50-BFB6-2ED59AC2E35B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E70F12-66B0-4A50-BFB6-2ED59AC2E35B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFB86E7C-B825-447E-9215-23719D21A8FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFB86E7C-B825-447E-9215-23719D21A8FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFB86E7C-B825-447E-9215-23719D21A8FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFB86E7C-B825-447E-9215-23719D21A8FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A9E70F12-66B0-4A50-BFB6-2ED59AC2E35B} = {F90307AA-58E7-43A4-8ADE-58ABC0FB2518}
+		{CFB86E7C-B825-447E-9215-23719D21A8FB} = {F90307AA-58E7-43A4-8ADE-58ABC0FB2518}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18618B72-7C82-4D3E-9A1E-E84B7006E46F}
+	EndGlobalSection
+EndGlobal

@@ -19,7 +19,7 @@ For more information, visit [Zrok](https://zrok.io/)
 
 <br>
 
-## Development
+## Development 
 
 1. Install [Scoop](https://scoop.sh/) (windows package manager)
 
@@ -29,13 +29,13 @@ For more information, visit [Zrok](https://zrok.io/)
 scoop install dotnet-sdk
 ```
 
-3. Create a new dll
+3. Create a new dll source
 
 ```
 dotnet new classlib -o <folder/namespace>
 ```
 
-4. Create a new exe
+4. Create a new exe source
 
 ```
 dotnet new console -o <folder/namespace>
@@ -46,6 +46,15 @@ dotnet new console -o <folder/namespace>
 ```
 dotnet build
 ```
+
+
+
+Source files are seperate programs inside src folder.
+
+During development of a source, navigate to its directory path when building instead of the project root.
+
+> Ex. C:/CSQB-CLIENT/src/CubeClient> dotnet build  
+
 
 ## Production
 
@@ -61,7 +70,7 @@ dotnet publish
 
 4. Rename *.exe file to Cube.exe
 
-6. Create installer using cracked AdvanceInstaller software then open tools/CubeSetup.aip  
+6. Create installer using [cracked AdvanceInstaller](https://www.cybermania.ws/apps/advanced-installer/) software then open tools/CubeSetup.aip  
 
 6. Create a custom action, click 'installed' hostconf.dll and run IncludeServerDomain function on install and maintenance.
 

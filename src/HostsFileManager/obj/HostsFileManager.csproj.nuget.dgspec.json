@@ -8,7 +8,7 @@
       "version": "1.0.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\LENOVO\\Desktop\\CSQB-CLIENT\\src\\HostsFileManager\\HostsFileManager.csproj",
-        "projectName": "hostconf",
+        "projectName": "HostsFileManager",
         "projectPath": "C:\\Users\\LENOVO\\Desktop\\CSQB-CLIENT\\src\\HostsFileManager\\HostsFileManager.csproj",
         "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\LENOVO\\Desktop\\CSQB-CLIENT\\src\\HostsFileManager\\obj\\",
