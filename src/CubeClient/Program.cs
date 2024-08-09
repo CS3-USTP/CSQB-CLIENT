@@ -23,10 +23,7 @@ namespace CubeClient
 
         static readonly string about = 
             "[blue]CS3[/] [orange3]Student Organization[/]\n\n" +
-            "Questions or issues?\n[cyan][link=https://mail.google.com]cs3.ustp@gmail.com[/][/]\n\n"
-            // skyblue
-            // + "[skyblue]Cube Client[/] is a console application that provides information about the CSQB Minecraft server.\n" + 
-            ;
+            "Questions or issues?\n[cyan][link=https://mail.google.com]cs3.ustp@gmail.com[/][/]\n\n";
 
         static readonly string minecraftInfo = 
             "[grey]Join our new Minecraft server tailored for computer scientists![/] " +
@@ -44,13 +41,16 @@ namespace CubeClient
 
         static void Main(string[] args)
         {
-
+            // Set the console configs
+            Console.Title = "Cube";
+            Console.CursorVisible = false;
+            Console.OutputEncoding = System.Text.Encoding.UTF8; // for special characters
+    
             // Check if the program is started with the correct arguments
             if (args.Length !=2) 
                 Environment.Exit(0); 
             if (args[0]!="start" && args[1]!="cube") 
                 Environment.Exit(0);
-
 
             
             AnsiConsole.Status()
@@ -70,10 +70,7 @@ namespace CubeClient
                     Thread.Sleep(2000);
                 });
 
-       
-            // Set console encoding to UTF-8 for special characters
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-
+    
             // Left section with banner and about information
             var leftSection = new Layout("Left").Update(
                 new Panel(
