@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- run as window application to hide console  -->
+    <OutputType>WinExe</OutputType>
+     <!-- requires .net5+ to run as windows application  -->
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- enable implicit usings and nullable -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- add logo icon -->
+    <ApplicationIcon>assets/logo.ico</ApplicationIcon>
+    <!-- change output name -->
+    <AssemblyName>Cube</AssemblyName>
+    <!-- dont output dlls -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <!-- dont include .net files on publish -->
+    <SelfContained>False</SelfContained>
+  </PropertyGroup>
+
+</Project>

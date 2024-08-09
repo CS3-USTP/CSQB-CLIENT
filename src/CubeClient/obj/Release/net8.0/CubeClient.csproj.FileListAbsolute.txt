@@ -13,3 +13,6 @@ C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\obj\Release\net8.0\ref\client
 C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\client.exe
 C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\client.deps.json
 C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\client.runtimeconfig.json
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\Spectre.Console.dll
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\obj\Release\net8.0\CubeClient.csproj.AssemblyReference.cache
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\obj\Release\net8.0\CubeClient.csproj.Up2Date

@@ -5,7 +5,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>assets/logo.ico</ApplicationIcon>
     <AssemblyName>client</AssemblyName>
   </PropertyGroup>
 

@@ -1,17 +1,17 @@
 
 namespace CubeClient {
     class Proxy {
-        public string enableToken { get; set; }
-        public string execPath { get; set; }
+        public string EnableToken { get; set; }
+        public string ExecutablePath { get; set; }
 
-        public Proxy(string execPath, string enableToken) {
-            this.enableToken = enableToken;
-            this.execPath = execPath;   
+        public Proxy(string executablePath, string enableToken) {
+            this.EnableToken = enableToken;
+            this.ExecutablePath = executablePath;   
         }
 
         public void runSync(string execArgs) {
             System.Diagnostics.Process process = new();
-            process.StartInfo.FileName = this.execPath;
+            process.StartInfo.FileName = this.ExecutablePath;
             process.StartInfo.Arguments = execArgs;
             process.Start();
             process.WaitForExit();
@@ -19,7 +19,7 @@ namespace CubeClient {
 
         public void runAsync(string execArgs) {
             System.Diagnostics.Process process = new();
-            process.StartInfo.FileName = this.execPath;
+            process.StartInfo.FileName = this.ExecutablePath;
             process.StartInfo.Arguments = execArgs;
             process.Start();
         }

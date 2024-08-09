@@ -22,29 +22,55 @@ namespace CubeClient
         ;
 
         static readonly string about = 
-            "[b]Welcome to Cube Client![/]\n\n" +
-            "[blue]CS3[/] [orange3]Student Organization[/]\n" +
-            "[link=https://csqb.github.io/CSQB-API/services.json]CSQB API[/]\n" +
-            "Email: cs3.ustp@gmail.com\n\n"
+            "[blue]CS3[/] [orange3]Student Organization[/]\n\n" +
+            "Questions or issues?\n[cyan][link=https://mail.google.com]cs3.ustp@gmail.com[/][/]\n\n"
             // skyblue
             // + "[skyblue]Cube Client[/] is a console application that provides information about the CSQB Minecraft server.\n" + 
             ;
 
         static readonly string minecraftInfo = 
-            "[grey]Join our new Minecraft server tailored for computer scientists![/]\n" +
+            "[grey]Join our new Minecraft server tailored for computer scientists![/] " +
             "[grey]Connect with fellow coders, build, explore, and have fun.[/]\n\n" +
             "[bold]Host:[/]       [blue]mc.csqb.org:25565[/]\n" +
             "[bold]Launcher:[/]   [blue]https://ely.by/load[/]";
 
         static readonly string instructions = 
             "[b]How to Get Started:[/]\n" +
-            "1. [green]Launch[/] the Minecraft launcher from the link provided.\n" +
-            "2. [green]Edit[/] your profile and skin by adding an account.\n" +
-            "3. [green]Connect[/] to the server using the host address.\n" +
-            "[bold yellow]Note: [/][red]Keep this program open to access CSQB servers.[/]";
+            "1. [green]Launch[/] the Minecraft launcher from the link.\n" +
+            "2. [green]Edit[/] your profile and skin by creating an account.\n" +
+            "3. [green]Connect[/] to the server using the host address.\n\n" +
+            "[bold yellow]Note: [/][red]Keep this program open to maintain access to the server.[/]";
+
 
         static void Main(string[] args)
         {
+
+            // Check if the program is started with the correct arguments
+            if (args.Length !=2) 
+                Environment.Exit(0); 
+            if (args[0]!="start" && args[1]!="cube") 
+                Environment.Exit(0);
+
+
+            
+            AnsiConsole.Status()
+                .Start("Thinking...", ctx => 
+                {
+                    // Simulate some work
+                    AnsiConsole.MarkupLine("Doing some work...");
+                    Thread.Sleep(1000);
+                    
+                    // Update the status and spinner
+                    ctx.Status("Thinking some more");
+                    ctx.Spinner(Spinner.Known.Star);
+                    ctx.SpinnerStyle(Style.Parse("green"));
+
+                    // Simulate some work
+                    AnsiConsole.MarkupLine("Doing some more work...");
+                    Thread.Sleep(2000);
+                });
+
+       
             // Set console encoding to UTF-8 for special characters
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -54,6 +80,10 @@ namespace CubeClient
                     Align.Center(
                         new Markup(banner+"\n\n"+about),
                         VerticalAlignment.Middle))
+                .Header("[bold blue]About[/]", Justify.Center)
+                .BorderColor(Color.SkyBlue2)
+                .RoundedBorder()
+                .Padding(1, 1, 1, 1)
                 .Expand()
             );
 
@@ -65,7 +95,7 @@ namespace CubeClient
                             Align.Left(
                                 new Markup(minecraftInfo))
                         )
-                        .Header("[bold green]Minecraft Server[/]")
+                        .Header("[bold green]Minecraft Server[/]", Justify.Center)
                         .BorderColor(Color.PaleGreen1)
                         .RoundedBorder()
                         .Padding(2, 2, 2, 2)
@@ -75,8 +105,8 @@ namespace CubeClient
                             Align.Left(
                                 new Markup(instructions))
                         )
-                        .Header("[bold yellow]Instructions[/]")
-                        .BorderColor(Color.Gold3)
+                        .Header("[bold mediumpurple2_1]Instructions[/]", Justify.Center)
+                        .BorderColor(Color.MediumPurple1)
                         .RoundedBorder()
                         .Padding(2, 2, 2, 2)
                         .Expand()));
@@ -86,18 +116,16 @@ namespace CubeClient
                 .SplitColumns(
                     new Layout("LeftPanel")
                         .SplitRows(leftSection)
+                        .MinimumSize(40)
                         .Ratio(1)
-                        .MinimumSize(50)
                         ,
                     new Layout("RightPanel")
                         .SplitRows(rightSection)
                         .Ratio(2)
-                        .MinimumSize(50)
                         );
 
             // Render the final layout
             AnsiConsole.Write(mainLayout);
-
 
             // press enter to exit
             Console.ReadLine();

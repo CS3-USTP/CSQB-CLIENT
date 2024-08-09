@@ -3,3 +3,4 @@ C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\publish\cl
 C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\publish\client.deps.json
 C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\publish\client.runtimeconfig.json
 C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\publish\client.pdb
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeClient\bin\Release\net8.0\publish\Spectre.Console.dll

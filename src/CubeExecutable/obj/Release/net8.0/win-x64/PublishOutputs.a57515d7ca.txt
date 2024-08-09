@@ -1,0 +1,2 @@
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeExecutable\bin\Release\net8.0\win-x64\publish\Cube.pdb
+C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeExecutable\bin\Release\net8.0\win-x64\publish\Cube.exe
