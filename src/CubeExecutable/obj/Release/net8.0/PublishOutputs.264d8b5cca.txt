@@ -1,5 +1,0 @@
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeExecutable\bin\Release\net8.0\publish\Cube.exe
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeExecutable\bin\Release\net8.0\publish\Cube.dll
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeExecutable\bin\Release\net8.0\publish\Cube.deps.json
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeExecutable\bin\Release\net8.0\publish\Cube.runtimeconfig.json
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\CubeExecutable\bin\Release\net8.0\publish\Cube.pdb

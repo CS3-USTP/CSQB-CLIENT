@@ -1,3 +1,0 @@
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\bin\Release\net8.0\publish\HostsFileManager.dll
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\bin\Release\net8.0\publish\HostsFileManager.deps.json
-C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostsFileManager\bin\Release\net8.0\publish\HostsFileManager.pdb
