@@ -1,10 +1,18 @@
-﻿using System;
+﻿using System.Diagnostics;
 using Spectre.Console;
 
 namespace CubeClient
 {
     class Program
     {
+
+        // TODO: On deployment, update path of executables
+        static readonly string zrokExecPath = "C:/Users/LENOVO/Desktop/CSQB-CLIENT/bin/zrok.exe";
+        static readonly string zrokEnableToken = "u8mseFvy2H5L";
+        static string minecraftToken = "u8mseFvy2H5L";
+        static string minecraftDomain = "mc.csqb.org";
+        static string minecraftPort = "25565"; 
+
         static readonly string banner = 
 
         "           [rgb(239,157,39)]▄[/][rgb(247,161,41)]▄[/][rgb(243,159,40)]▄[/]          \n" 
@@ -46,31 +54,92 @@ namespace CubeClient
             Console.CursorVisible = false;
             Console.OutputEncoding = System.Text.Encoding.UTF8; // for special characters
     
-            // Check if the program is started with the correct arguments
-            if (args.Length !=2) 
-                Environment.Exit(0); 
-            if (args[0]!="start" && args[1]!="cube") 
+            // Validate program arguments
+            if (args.Length != 2 || args[0] != "start" || args[1] != "cube") 
+            {
                 Environment.Exit(0);
+            }
 
+            Setup();
+            Layout();
+            Console.ReadLine(); // press enter to exit
+        }
+
+
+        static void Setup() 
+        {
+            bool status;
+            bool prerequisites = true;
             
             AnsiConsole.Status()
-                .Start("Thinking...", ctx => 
+                .Start("Linking environment node...", ctx => 
                 {
-                    // Simulate some work
-                    AnsiConsole.MarkupLine("Doing some work...");
-                    Thread.Sleep(1000);
-                    
-                    // Update the status and spinner
-                    ctx.Status("Thinking some more");
-                    ctx.Spinner(Spinner.Known.Star);
-                    ctx.SpinnerStyle(Style.Parse("green"));
+                    status = Execute(zrokExecPath, $"enable {zrokEnableToken} --headless");
 
-                    // Simulate some work
-                    AnsiConsole.MarkupLine("Doing some more work...");
-                    Thread.Sleep(2000);
+                    if (!status) 
+                    { // check if process exited with error
+                        AnsiConsole.MarkupLine("[red]Failed to link environment![/]");
+                        prerequisites = false;
+                        return;
+                    }
+
+                    AnsiConsole.MarkupLine("[green]Environment linked successfully![/]");            
+                    AnsiConsole.MarkupLine("Started proxying to server");
+                    
+                    ctx.Status("Accessing Minecraft tunnel...");
+                    ctx.Spinner(Spinner.Known.BouncingBar);
+                    ctx.SpinnerStyle(Style.Parse("orange1"));
+
+                    status = Execute(zrokExecPath, $"access private {minecraftToken} --bind {minecraftDomain}:{minecraftPort} --headless");
+
+                    if (!status) 
+                    { // check if process exited with error
+                        AnsiConsole.MarkupLine("[red]Failed to link environment![/]");
+                        prerequisites = false;
+                        return;
+                    }
                 });
 
+            if (!prerequisites) 
+            {
+                Execute(zrokExecPath, "disable");
+                Console.WriteLine("\n\nPress enter to exit...");
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
+        }
+
     
+
+        static bool Execute(string execPath, string execArgs) 
+        {
+            Process process = new()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = execPath,
+                    Arguments = execArgs,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,  
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+
+            if (process.ExitCode != 0) 
+            {
+                Console.WriteLine(process.StandardError.ReadToEnd());
+            }
+
+            return process.ExitCode == 0;
+        }
+
+
+
+        static void Layout() 
+        {
             // Left section with banner and about information
             var leftSection = new Layout("Left").Update(
                 new Panel(
@@ -123,9 +192,12 @@ namespace CubeClient
 
             // Render the final layout
             AnsiConsole.Write(mainLayout);
-
-            // press enter to exit
-            Console.ReadLine();
         }
+
+
+
+
+
+
     }
 }
