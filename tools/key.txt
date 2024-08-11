@@ -1,0 +1,15 @@
+
+Encryption
+Token1+Token2 -> 1(AES+CBC -> ROT13) -> 2(AES+CBC -> ROT13)
+
+Decryption
+Fetcher -> 2(ROT13 -> AES+CBC)
+Program -> 1(ROT13 -> AES+CBC)
+
+Group 1:
+32bytekey: 2b7e4ab34ccc5131e6050205483200f580c04f5b36a0a3719b851cd092985080
+16bytekey: 0d75cfcfb4bf31bd700ec5075df553a6
+
+Group 2:
+32bytekey: 093304f82a1466ca92c3f129378b17fb016ee42bb4269a2ed50fc6fa7a8c9f43
+16bytekey: 7572ecc622c8d9b74320ed9cc1993127
