@@ -94,3 +94,5 @@ Decrypt:
 <Program> -> ROT13 -> AES+CBC 
 
 ```
+
+Note: For the initial, I use encrytion and obfuscation to hide the token, im waiting for someone to reverse engineer this on purpose. In the next version will be a more secured way of storing the token is to hosted a [public api](https://docs.zrok.io/docs/concepts/http/) for token verification and keep the key server-side instead.
