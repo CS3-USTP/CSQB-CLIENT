@@ -5,11 +5,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>client</AssemblyName>
+    <AssemblyName>Client</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
+
+    <!-- Reference other projects within the same solution -->
+    <ProjectReference Include="C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\ProxyConfigManager\ProxyConfigManager.csproj" />
+    <ProjectReference Include="C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostConfigManager\HostConfigManager.csproj" />
   </ItemGroup>
 
 </Project>

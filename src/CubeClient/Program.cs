@@ -1,18 +1,12 @@
 ﻿using System.Diagnostics;
 using Spectre.Console;
+using HostConfigManager;
+using ProxyConfigManager;
 
 namespace CubeClient
 {
     class Program
     {
-
-        // TODO: On deployment, update path of executables
-        static readonly string zrokExecPath = "C:/Users/LENOVO/Desktop/CSQB-CLIENT/bin/zrok.exe";
-        static readonly string zrokEnableToken = "u8mseFvy2H5L";
-        static string minecraftToken = "u8mseFvy2H5L";
-        static string minecraftDomain = "mc.csqb.org";
-        static string minecraftPort = "25565"; 
-
         static readonly string banner = 
 
         "           [rgb(239,157,39)]▄[/][rgb(247,161,41)]▄[/][rgb(243,159,40)]▄[/]          \n" 
@@ -46,7 +40,11 @@ namespace CubeClient
             "3. [green]Connect[/] to the server using the host address.\n\n" +
             "[bold yellow]Note: [/][red]Keep this program open to maintain access to the server.[/]";
 
-
+        static readonly string KEY1 = "2b7e4ab34ccc5131e6050205483200f580c04f5b36a0a3719b851cd092985080";
+        static readonly string IV1 = "0d75cfcfb4bf31bd700ec5075df553a6";
+        static readonly byte[] KEY1_BYTES = Token.HexToBytes(KEY1);
+        static readonly byte[]  IV1_BYTES = Token.HexToBytes(IV1);        
+                
         static void Main(string[] args)
         {
             // Set the console configs
@@ -60,59 +58,18 @@ namespace CubeClient
                 Environment.Exit(0);
             }
 
-            Setup();
-            Layout();
-            Console.ReadLine(); // press enter to exit
+            Setup(); Layout();
+
+            // press enter to exit
+            Console.ReadLine(); 
         }
 
 
-        static void Setup() 
+        static Process ExecuteProxy(string execArgs) 
         {
-            bool status;
-            bool prerequisites = true;
+            // TODO: On deployment, update path of executables
+            const string execPath = "C:/Users/LENOVO/Desktop/CSQB-CLIENT/bin/proxy.exe";
             
-            AnsiConsole.Status()
-                .Start("Linking environment node...", ctx => 
-                {
-                    status = Execute(zrokExecPath, $"enable {zrokEnableToken} --headless");
-
-                    if (!status) 
-                    { // check if process exited with error
-                        AnsiConsole.MarkupLine("[red]Failed to link environment![/]");
-                        prerequisites = false;
-                        return;
-                    }
-
-                    AnsiConsole.MarkupLine("[green]Environment linked successfully![/]");            
-                    AnsiConsole.MarkupLine("Started proxying to server");
-                    
-                    ctx.Status("Accessing Minecraft tunnel...");
-                    ctx.Spinner(Spinner.Known.BouncingBar);
-                    ctx.SpinnerStyle(Style.Parse("orange1"));
-
-                    status = Execute(zrokExecPath, $"access private {minecraftToken} --bind {minecraftDomain}:{minecraftPort} --headless");
-
-                    if (!status) 
-                    { // check if process exited with error
-                        AnsiConsole.MarkupLine("[red]Failed to link environment![/]");
-                        prerequisites = false;
-                        return;
-                    }
-                });
-
-            if (!prerequisites) 
-            {
-                Execute(zrokExecPath, "disable");
-                Console.WriteLine("\n\nPress enter to exit...");
-                Console.ReadLine();
-                Environment.Exit(0);
-            }
-        }
-
-    
-
-        static bool Execute(string execPath, string execArgs) 
-        {
             Process process = new()
             {
                 StartInfo = new ProcessStartInfo
@@ -127,17 +84,115 @@ namespace CubeClient
             };
             process.Start();
             process.WaitForExit();
-
-            if (process.ExitCode != 0) 
-            {
-                Console.WriteLine(process.StandardError.ReadToEnd());
-            }
-
-            return process.ExitCode == 0;
+            return process;
         }
 
 
 
+        static void Setup() 
+        {
+            Process process;
+            bool prerequisites = true;
+            
+            AnsiConsole.Status()
+                .Start("Checking for updates...", ctx => 
+                {
+                    ctx.Spinner(Spinner.Known.Dots);
+                    ctx.SpinnerStyle(Style.Parse("blue"));
+
+                    AnsiConsole.MarkupLine("[grey]Updating configurations...[/]");
+
+                    ProxyConfig.CreateConfigFile("there's nothing in here");
+
+                    AnsiConsole.MarkupLine("[green]Configs updated successfully![/]");
+
+                    AnsiConsole.MarkupLine("[grey]Updating tunnels...[/]");
+                    
+                    string token = FetchToken();
+
+                    // domains
+                    string minecraftDomain = HostConfig.ServerHost["minecraft"].Split(" ")[1];
+                    
+                    // Get the first line of the string of the token
+                    token = Token.Rot13(token.Split('\n')[0]);
+
+                    AnsiConsole.MarkupLine("[green]Tunnels updated successfully![/]");
+
+                    AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
+
+                    ctx.Status("Verifying environment...");          
+
+                    process = ExecuteProxy($"enable {token[..12]} --headless");
+
+                    if (process.ExitCode != 0) 
+                    { // check if process exited with error
+                        Error(process);
+                        AnsiConsole.MarkupLine("[orange1]Attempting restart..[/]");
+
+                        process = ExecuteProxy("disable");
+                        process = ExecuteProxy($"enable {token[..12]} --headless");
+                        
+                        if (process.ExitCode != 0) {
+                            AnsiConsole.MarkupLine("[red]Failed to enable environment![/]");
+                            prerequisites = false;
+                            return;
+                        };
+                    }
+
+                    AnsiConsole.MarkupLine("[green]Environment linked successfully![/]");            
+                    AnsiConsole.MarkupLine("[grey]Started proxying to server[/]");
+                    
+                    ctx.Status("Accessing Minecraft tunnel...");
+                    ctx.Spinner(Spinner.Known.BouncingBar);
+                    ctx.SpinnerStyle(Style.Parse("orange1"));
+
+                    process = ExecuteProxy($"access private {token[12..24]} --bind {minecraftDomain}:{25565} --headless");
+
+                    if (process.ExitCode != 0) 
+                    { // check if process exited with error
+                        Error(process);
+                        AnsiConsole.MarkupLine("[red]Failed to access Minecraft tunnel![/]");
+                        prerequisites = false;
+                        return;
+                    }
+                });
+
+
+            if (!prerequisites) 
+            {
+                ExecuteProxy("disable");
+                Console.Write("\n\nPress enter to exit...");
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
+
+            Console.ReadLine();
+        }
+
+
+        static string FetchToken() {
+            var tunnel = Token.Fetch(
+                "https://raw.githubusercontent.com/CS3-USTP/CSQB-API/main/tunnels.txt");
+
+            if (tunnel == null) 
+            {
+                AnsiConsole.MarkupLine("[red]Failed to fetch tokens![/]");
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
+
+            /* Group 1 Decryption */
+            // Apply ROT13 decoding again
+            string token = Token.Rot13(tunnel);
+
+            // Decrypt with KEY1 and IV1
+            // contains the message
+            token = Token.Decrypt(token, KEY1_BYTES, IV1_BYTES);
+
+            return token;
+        }
+
+        
         static void Layout() 
         {
             // Left section with banner and about information
@@ -195,8 +250,15 @@ namespace CubeClient
         }
 
 
-
-
+        static void Error(Process process) {
+            AnsiConsole.MarkupLine("[red]{0}[/]", 
+                            process.StandardError.ReadToEnd()
+                                .Trim()
+                                .Replace("[","| ")
+                                .Replace("]"," |")
+                                .Replace("zrok ", "")
+                                .Replace("'",""));
+        }
 
 
     }

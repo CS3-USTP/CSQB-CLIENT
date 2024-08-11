@@ -1,31 +1,10 @@
 
-/*
-    
-    version: 1.0.0
-    
-    Ahoy, ye explorers!
 
-    I be mighty impressed ye’ve stumbled upon this here file. I was plannin' to bury it down, but thought it'd be a jolly good time to leave a message for ye.
-
-    This here problem be crafted for curious computer swashbucklers. A fine crew like yerself should be able to uncover it, aye? If ye can't, well shiver me timbers, ye might not be the scallywag I’m searchin' for.
-
-    I hope ye have a grand time readin’ the code. Should ye have any questions, don’t hesitate to holler.
-
-    Tell me yer grand tale and picture the treasure ye've uncovered.
-    Fair winds and good luck!
-    
-    - cs3.ustp@gmail.com
-
- */
-
-namespace HostsManager
+namespace HostConfigManager
 {
-    public static class HostsOperations
+    public static class HostConfig
     {
-        
         private static readonly string hostsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), @"drivers\etc\hosts");
-
-        static readonly string proxyToken = "h8zfrSil2U5Y";
 
         private static readonly Dictionary<string, string> serverHost = new()
         {
@@ -33,11 +12,6 @@ namespace HostsManager
             {"web",       "127.0.69.1  csqb.org"}
         };
 
-        public static string ProxyToken
-        {
-            get { return proxyToken; }
-        }
-         
         public static Dictionary<string, string> ServerHost
         {
             get { return serverHost; }
@@ -75,7 +49,7 @@ namespace HostsManager
             string[] lines = File.ReadAllLines(hostsPath);
             bool found = false;
 
-            using (StreamWriter writer = new StreamWriter(hostsPath))
+            using (StreamWriter writer = new(hostsPath))
             {
                 foreach (string line in lines)
                 {
@@ -101,28 +75,7 @@ namespace HostsManager
         }
 
 
-    public static string Encoding(string input)
-    {
-        ArgumentNullException.ThrowIfNull(input);
-
-        char _(char c)
-        {
-            if (char.IsLetter(c))
-            {
-                char offset = char.IsUpper(c) ? 'A' : 'a';
-                return (char)((((c - offset) + 2) % 26) + offset);
-            }
-            return c;
-        }
-
-        char[] result = new char[input.Length];
-        for (int i = 0; i < input.Length; i++)
-        {
-            result[i] = _(input[i]);
-        }
-
-        return new string(result);
-    }
+    
 
         
 
