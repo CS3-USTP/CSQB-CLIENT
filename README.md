@@ -81,3 +81,16 @@ dotnet publish
 1. Public Domain
 
 ![image](https://github.com/user-attachments/assets/6aed4b0c-706b-49ed-8f76-f08214daba2c)
+
+
+## Encryption
+
+```
+Encrypt:
+Token1+Token2 -> AES+CBC -> ROT13 -> AES+CBC -> ROT13
+
+Decrypt:
+<Fetcher> -> ROT13 -> AES+CBC 
+<Program> -> ROT13 -> AES+CBC 
+
+```
