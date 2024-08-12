@@ -5,6 +5,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- dont output dlls -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <!-- dont include .net files on publish -->
+    <SelfContained>False</SelfContained>
   </PropertyGroup>
 
 </Project>
