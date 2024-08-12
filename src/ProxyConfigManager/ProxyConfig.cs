@@ -18,16 +18,16 @@ namespace ProxyConfigManager
                 if (Directory.Exists(zrokFolder))
                 {
                     Directory.Delete(zrokFolder, true);
-                    Console.WriteLine($"Folder '{zrokFolder}' deleted successfully.");
+                    // Console.WriteLine($"Folder '{zrokFolder}' deleted successfully.");
                 }
                 else
                 {
-                    Console.WriteLine($"Folder '{zrokFolder}' does not exist.");
+                    // Console.WriteLine($"Folder '{zrokFolder}' does not exist.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
