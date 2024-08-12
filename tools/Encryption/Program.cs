@@ -66,7 +66,7 @@ namespace Encryption {
                 return;
             }
 
-            Console.WriteLine("Enter minecraft token: ");
+            Console.Write("Enter minecraft token: ");
             
             minecraftToken = Console.ReadLine() ?? string.Empty;
 
@@ -77,9 +77,9 @@ namespace Encryption {
             }
 
             /* encryption */
-            token = Rot13(proxyToken+secretMessage);
-            token = Rot13(Encrypt(Rot13(Encrypt(token, KEY1, IV1)), KEY2, IV2));                
-
+            token = Rot13(proxyToken+minecraftToken+secretMessage);
+            token = Rot13(Encrypt(Rot13(Encrypt(token, KEY1, IV1)), KEY2, IV2)); 
+            Console.WriteLine(token);               
             
             /* decryption */
             // token = Rot13(token);
