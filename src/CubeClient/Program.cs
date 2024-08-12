@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Spectre.Console;
-using HostConfigManager;
 using ProxyConfigManager;
+using HostConfigManager;
 
 namespace CubeClient
 {
@@ -64,29 +64,44 @@ namespace CubeClient
             Console.ReadLine(); 
         }
 
-
-        static Process ExecuteProxy(string execArgs) 
+        static void OnExit(object sender, EventArgs e)
         {
-            // TODO: On deployment, update path of executables
-            const string execPath = "C:/Users/LENOVO/Desktop/CSQB-CLIENT/bin/Proxy.exe";
-            
-            Process process = new()
+            Console.WriteLine("Application is exiting...");
+
+            // Perform cleanup or other necessary tasks here.
+            AnsiConsole.Status()
+                .Start("Clearing cache..", ctx => {
+                    ctx.Spinner(Spinner.Known.Dots);
+                    ClearCache();
+                    }
+                ); 
+
+            if (e is ConsoleCancelEventArgs cancelEventArgs)
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = execPath,
-                    Arguments = execArgs,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,  
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-            process.Start();
-            process.WaitForExit();
-            return process;
+                // Handle Ctrl+C or shutdown signal.
+                Console.WriteLine("Cancellation requested via Ctrl+C or shutdown signal.");
+                cancelEventArgs.Cancel = false; // Set to true if you want to prevent exit.
+            }
+            else if (e is UnhandledExceptionEventArgs unhandledExceptionArgs)
+            {
+                // Handle unhandled exceptions.
+                Console.WriteLine("Unhandled exception occurred.");
+                Console.WriteLine($"Exception: {unhandledExceptionArgs.ExceptionObject}");
+            }
+            else
+            {
+                // Handle other forms of exit (e.g., normal process exit).
+                Console.WriteLine("Normal process exit.");
+            }
         }
 
+        static void ClearCache() {
+
+            HostConfig.ExcludeServerHost();
+            ProxyConfig.Execute("disable");
+            ProxyConfig.Remove();
+            
+        }
 
 
         static void Setup() 
@@ -100,12 +115,6 @@ namespace CubeClient
                     ctx.Spinner(Spinner.Known.Dots);
                     ctx.SpinnerStyle(Style.Parse("blue"));
 
-                    AnsiConsole.MarkupLine("[grey]Updating configurations...[/]");
-
-                    ProxyConfig.CreateConfigFile("there's nothing in here");
-
-                    AnsiConsole.MarkupLine("[green]Configs updated successfully![/]");
-
                     AnsiConsole.MarkupLine("[grey]Updating tunnels...[/]");
                     
                     string token = FetchToken();
@@ -118,19 +127,24 @@ namespace CubeClient
 
                     AnsiConsole.MarkupLine("[green]Tunnels updated successfully![/]");
 
-                    AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
-
                     ctx.Status("Verifying environment...");          
 
-                    process = ExecuteProxy($"enable {token[..12]} --headless");
+                    AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
+
+                    process = ProxyConfig.Execute($"enable {token[..12]} --headless");
 
                     if (process.ExitCode != 0) 
                     { // check if process exited with error
                         Error(process);
                         AnsiConsole.MarkupLine("[orange1]Attempting restart..[/]");
+                        
+                        AnsiConsole.MarkupLine("[grey]Clearing Cache...[/]");    
+                        ClearCache();
 
-                        process = ExecuteProxy("disable");
-                        process = ExecuteProxy($"enable {token[..12]} --headless");
+                        AnsiConsole.MarkupLine("[grey]Cache has been cleared[/]");    
+                        AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
+
+                        process = ProxyConfig.Execute($"enable {token[..12]} --headless");
                         
                         if (process.ExitCode != 0) {
                             AnsiConsole.MarkupLine("[red]Failed to enable environment![/]");
@@ -146,7 +160,7 @@ namespace CubeClient
                     ctx.Spinner(Spinner.Known.BouncingBar);
                     ctx.SpinnerStyle(Style.Parse("orange1"));
 
-                    process = ExecuteProxy($"access private {token[12..24]} --bind {minecraftDomain}:{25565} --headless");
+                    process = ProxyConfig.Execute($"access private {token[12..24]} --bind {minecraftDomain}:{25565} --headless");
 
                     if (process.ExitCode != 0) 
                     { // check if process exited with error
@@ -160,7 +174,7 @@ namespace CubeClient
 
             if (!prerequisites) 
             {
-                ExecuteProxy("disable");
+                ClearCache();
                 Console.Write("\n\nPress enter to exit...");
                 Console.ReadLine();
                 Environment.Exit(0);
