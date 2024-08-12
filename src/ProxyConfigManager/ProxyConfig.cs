@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Diagnostics;
 
 
@@ -25,7 +23,7 @@ namespace ProxyConfigManager
                     // Console.WriteLine($"Folder '{zrokFolder}' does not exist.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Console.WriteLine($"An error occurred: {ex.Message}");
             }
