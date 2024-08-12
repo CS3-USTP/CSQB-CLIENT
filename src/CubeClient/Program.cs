@@ -68,7 +68,7 @@ namespace CubeClient
         static Process ExecuteProxy(string execArgs) 
         {
             // TODO: On deployment, update path of executables
-            const string execPath = "C:/Users/LENOVO/Desktop/CSQB-CLIENT/bin/proxy.exe";
+            const string execPath = "C:/Users/LENOVO/Desktop/CSQB-CLIENT/bin/Proxy.exe";
             
             Process process = new()
             {

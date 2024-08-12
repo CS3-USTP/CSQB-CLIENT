@@ -83,23 +83,6 @@ namespace CubeClient
             return bytes;
         }
 
-        /** for reference only, DO NOT SHIP TO PRODUCTION */
-        // public static string Encrypt(string plainText, byte[] key, byte[] iv)
-        // {
-        //     using (Aes aes = Aes.Create())
-        //     {
-        //         aes.Key = key;
-        //         aes.IV = iv;
-        //         aes.Mode = CipherMode.CFB;
-        //         aes.Padding = PaddingMode.PKCS7;
-
-        //         ICryptoTransform encryptor = aes.CreateEncryptor();
-        //         byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
-        //         byte[] encryptedBytes = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
-        //         return Convert.ToBase64String(encryptedBytes);
-        //     }
-        // }
-
 
     }
 }

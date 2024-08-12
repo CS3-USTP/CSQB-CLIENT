@@ -87,7 +87,7 @@ dotnet publish
 
 ```
 Encrypt:
-Token1+Token2 -> AES+CBC -> ROT13 -> AES+CBC -> ROT13
+ROT13(Token1+Token2) -> AES+CBC -> ROT13 -> AES+CBC -> ROT13
 
 Decrypt:
 <Fetcher> -> ROT13 -> AES+CBC 
