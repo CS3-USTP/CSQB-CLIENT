@@ -36,11 +36,11 @@ namespace HostConfigManager
             if (!hostsContent.Contains(entry))
             {
                 File.AppendAllText(hostsPath, Environment.NewLine + entry);
-                Console.WriteLine($"Entry \"{entry}\" added to hosts file.");
+                // Console.WriteLine($"Entry \"{entry.Split()[1]}\" added to hosts file.");
             }
             else
             {
-                Console.WriteLine($"Entry \"{entry}\" already exists in hosts file.");
+                // Console.WriteLine($"Entry \"{entry.Split()[1]}\" already exists in hosts file.");
             }
         }
 
@@ -66,11 +66,11 @@ namespace HostConfigManager
 
             if (found)
             {
-                Console.WriteLine($"Entry \"{entry}\" removed from hosts file.");
+                // Console.WriteLine($"Entry \"{entry.Split()[1]}\" removed from hosts file.");
             }
             else
             {
-                Console.WriteLine($"Entry \"{entry}\" not found in hosts file.");
+                // Console.WriteLine($"Entry \"{entry}\" not found in hosts file.");
             }
         }
         
