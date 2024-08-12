@@ -73,10 +73,6 @@ namespace HostConfigManager
                 Console.WriteLine($"Entry \"{entry}\" not found in hosts file.");
             }
         }
-
-
-    
-
         
 
     }
