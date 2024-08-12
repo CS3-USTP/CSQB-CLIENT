@@ -43,8 +43,12 @@ namespace CubeClient
         static readonly string KEY1 = "2b7e4ab34ccc5131e6050205483200f580c04f5b36a0a3719b851cd092985080";
         static readonly string IV1 = "0d75cfcfb4bf31bd700ec5075df553a6";
         static readonly byte[] KEY1_BYTES = Token.HexToBytes(KEY1);
-        static readonly byte[]  IV1_BYTES = Token.HexToBytes(IV1);        
-                
+        static readonly byte[]  IV1_BYTES = Token.HexToBytes(IV1);   
+        static readonly string[] minecraftTunnel = 
+            HostConfig.ServerHost["minecraft"]
+            .Split(new[] { ' ' }, // split the string by space
+                StringSplitOptions.RemoveEmptyEntries); // removes empty strings in the array
+
         static void Main(string[] args)
         {
             // Set the console configs
@@ -58,10 +62,7 @@ namespace CubeClient
                 Environment.Exit(0);
             }
 
-            Setup(); Layout();
-
-            // press enter to exit
-            Console.ReadLine(); 
+            Setup(); Layout(); Quit();
         }
 
         static void OnExit(object sender, EventArgs e)
@@ -79,19 +80,19 @@ namespace CubeClient
             if (e is ConsoleCancelEventArgs cancelEventArgs)
             {
                 // Handle Ctrl+C or shutdown signal.
-                Console.WriteLine("Cancellation requested via Ctrl+C or shutdown signal.");
+                // Console.WriteLine("Cancellation requested via Ctrl+C or shutdown signal.");
                 cancelEventArgs.Cancel = false; // Set to true if you want to prevent exit.
             }
             else if (e is UnhandledExceptionEventArgs unhandledExceptionArgs)
             {
                 // Handle unhandled exceptions.
-                Console.WriteLine("Unhandled exception occurred.");
-                Console.WriteLine($"Exception: {unhandledExceptionArgs.ExceptionObject}");
+                // Console.WriteLine("Unhandled exception occurred.");
+                // Console.WriteLine($"Exception: {unhandledExceptionArgs.ExceptionObject}");
             }
             else
             {
                 // Handle other forms of exit (e.g., normal process exit).
-                Console.WriteLine("Normal process exit.");
+                // Console.WriteLine("Normal process exit.");
             }
         }
 
@@ -103,54 +104,68 @@ namespace CubeClient
             
         }
 
+        static void Quit() {
+            ClearCache();
+            Console.Write("\n\nPress enter to exit...");
+            Console.ReadLine();
+            Environment.Exit(0);
+        }
+
 
         static void Setup() 
         {
             Process process;
             bool prerequisites = true;
-            
+                        
             AnsiConsole.Status()
                 .Start("Checking for updates...", ctx => 
                 {
                     ctx.Spinner(Spinner.Known.Dots);
                     ctx.SpinnerStyle(Style.Parse("blue"));
-
                     AnsiConsole.MarkupLine("[grey]Updating tunnels...[/]");
                     
+                    // tunnel tokens from csqb-api
                     string token = FetchToken();
 
-                    // domains
-                    string minecraftDomain = HostConfig.ServerHost["minecraft"].Split(" ")[1];
-                    
-                    // Get the first line of the string of the token
-                    token = Token.Rot13(token.Split('\n')[0]);
+                    // get the first line of the string of the token
+                    token = Token.Rot13(token.Split("\n")[0]);
 
                     AnsiConsole.MarkupLine("[green]Tunnels updated successfully![/]");
-
-                    ctx.Status("Verifying environment...");          
-
                     AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
+                    ctx.Status("Verifying environment...");     
 
-                    process = ProxyConfig.Execute($"enable {token[..12]} --headless");
-
-                    if (process.ExitCode != 0) 
-                    { // check if process exited with error
-                        Error(process);
-                        AnsiConsole.MarkupLine("[orange1]Attempting restart..[/]");
-                        
-                        AnsiConsole.MarkupLine("[grey]Clearing Cache...[/]");    
-                        ClearCache();
-
-                        AnsiConsole.MarkupLine("[grey]Cache has been cleared[/]");    
-                        AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
-
+                    try 
+                    { // zrok params check
                         process = ProxyConfig.Execute($"enable {token[..12]} --headless");
-                        
-                        if (process.ExitCode != 0) {
-                            AnsiConsole.MarkupLine("[red]Failed to enable environment![/]");
-                            prerequisites = false;
-                            return;
-                        };
+
+                        if (process.ExitCode != 0) 
+                        { // zrok process check
+                            Error(process);
+                            
+                            AnsiConsole.MarkupLine("[orange1]Attempting restart..[/]");
+                            AnsiConsole.MarkupLine("[grey]Clearing Cache...[/]");    
+                            
+                            ClearCache();
+                            
+                            AnsiConsole.MarkupLine("[grey]Cache has been cleared[/]");    
+                            AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
+
+                            process = ProxyConfig.Execute($"enable {token[..12]} --headless");
+
+                            if (process.ExitCode != 0) 
+                            { // zrok process check
+                                AnsiConsole.MarkupLine("[red]Failed to enable environment![/]");
+                                prerequisites = false;
+                                return;
+                            };
+                        }
+                    }
+
+                    catch (Exception) 
+                    {
+                        AnsiConsole.MarkupLine("[red]Invalid parameters.[/]");
+                        prerequisites = false;
+                        return;
                     }
 
                     AnsiConsole.MarkupLine("[green]Environment linked successfully![/]");            
@@ -160,27 +175,35 @@ namespace CubeClient
                     ctx.Spinner(Spinner.Known.BouncingBar);
                     ctx.SpinnerStyle(Style.Parse("orange1"));
 
-                    process = ProxyConfig.Execute($"access private {token[12..24]} --bind {minecraftDomain}:{25565} --headless");
+                    try 
+                    { // zrok params check
+                        
+                        string test = $"access private {token[12..24]} --bind {minecraftTunnel[1]}:{minecraftTunnel[2]} --headless";
+                        AnsiConsole.MarkupLine(test);
+                        process = ProxyConfig.Execute(test);
 
-                    if (process.ExitCode != 0) 
-                    { // check if process exited with error
-                        Error(process);
+                        if (process.ExitCode != 0) 
+                        { // zrok process check
+                            Error(process);
+                            AnsiConsole.MarkupLine("[red]Failed to access Minecraft tunnel![/]");
+                            prerequisites = false;  
+                            return;
+                        }
+                    }
+                    catch (Exception) 
+                    {
                         AnsiConsole.MarkupLine("[red]Failed to access Minecraft tunnel![/]");
                         prerequisites = false;
                         return;
                     }
-                });
+
+                    AnsiConsole.MarkupLine("[green]Minecraft tunnel accessed successfully![/]");
 
 
-            if (!prerequisites) 
-            {
-                ClearCache();
-                Console.Write("\n\nPress enter to exit...");
-                Console.ReadLine();
-                Environment.Exit(0);
-            }
+                }
+            );
 
-            Console.ReadLine();
+            if (!prerequisites) Quit();
         }
 
 
