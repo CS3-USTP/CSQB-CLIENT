@@ -88,7 +88,6 @@ namespace CubeClient
 
         static void ClearCache() {
 
-            HostConfig.ExcludeServerHost();
             ProxyConfig.Execute("disable");
             ProxyConfig.KillProxyProcesses();
             ProxyConfig.Remove();
