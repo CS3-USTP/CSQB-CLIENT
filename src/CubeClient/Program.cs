@@ -37,20 +37,26 @@ namespace CubeClient
             "[b]How to Get Started:[/]\n" +
             "1. [green]Launch[/] the Minecraft launcher from the link.\n" +
             "2. [green]Edit[/] your profile and skin by creating an account.\n" +
-            "3. [green]Connect[/] to the server using the host address.\n\n" +
+            "4. [green]Reopen[/] the app if there are errors that occur.\n\n" +
             "[bold yellow]Note: [/][red]Keep this program open to maintain access to the server.[/]";
 
         static readonly string KEY1 = "2b7e4ab34ccc5131e6050205483200f580c04f5b36a0a3719b851cd092985080";
         static readonly string IV1 = "0d75cfcfb4bf31bd700ec5075df553a6";
         static readonly byte[] KEY1_BYTES = Token.HexToBytes(KEY1);
         static readonly byte[]  IV1_BYTES = Token.HexToBytes(IV1);   
-        static readonly string[] minecraftTunnel = 
+        static readonly string[] minecraftHost = 
             HostConfig.ServerHost["minecraft"]
             .Split(new[] { ' ' }, // split the string by space
                 StringSplitOptions.RemoveEmptyEntries); // removes empty strings in the array
 
         static void Main(string[] args)
         {
+            // Register the event handler
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
+            Console.TreatControlCAsInput = true;
+
+
             // Set the console configs
             Console.Title = "Cube";
             Console.CursorVisible = false;
@@ -61,62 +67,78 @@ namespace CubeClient
             {
                 Environment.Exit(0);
             }
+            
+            Console.Clear();
 
-            Setup(); Layout(); Quit();
+            Setup();
         }
 
-        static void OnExit(object sender, EventArgs e)
+        // Event handler for process exit
+        private static void OnProcessExit(object? sender, EventArgs e)
         {
-            Console.WriteLine("Application is exiting...");
+            // Handle the event
+            AnsiConsole.MarkupLine("[grey]Exiting...[/]");
 
-            // Perform cleanup or other necessary tasks here.
-            AnsiConsole.Status()
-                .Start("Clearing cache..", ctx => {
-                    ctx.Spinner(Spinner.Known.Dots);
-                    ClearCache();
-                    }
-                ); 
+            // Optionally, perform cleanup tasks here
+            ClearCache();
 
-            if (e is ConsoleCancelEventArgs cancelEventArgs)
-            {
-                // Handle Ctrl+C or shutdown signal.
-                // Console.WriteLine("Cancellation requested via Ctrl+C or shutdown signal.");
-                cancelEventArgs.Cancel = false; // Set to true if you want to prevent exit.
-            }
-            else if (e is UnhandledExceptionEventArgs unhandledExceptionArgs)
-            {
-                // Handle unhandled exceptions.
-                // Console.WriteLine("Unhandled exception occurred.");
-                // Console.WriteLine($"Exception: {unhandledExceptionArgs.ExceptionObject}");
-            }
-            else
-            {
-                // Handle other forms of exit (e.g., normal process exit).
-                // Console.WriteLine("Normal process exit.");
-            }
+            Thread.Sleep(3000);
         }
+
 
         static void ClearCache() {
 
             HostConfig.ExcludeServerHost();
             ProxyConfig.Execute("disable");
+            ProxyConfig.KillProxyProcesses();
             ProxyConfig.Remove();
             
         }
 
-        static void Quit() {
-            ClearCache();
-            Console.Write("\n\nPress enter to exit...");
-            Console.ReadLine();
-            Environment.Exit(0);
-        }
-
-
         static void Setup() 
         {
             Process process;
+            string? token = Prerequisites();
+
+            if (token == null) {
+                Environment.Exit(0);
+                return;
+            }
+
+            try {
+                
+                process = ProxyConfig.Execute(
+                    $"access private {token[12..24]} --bind {minecraftHost[1]}:{minecraftHost[2]} --headless --panic"
+                );
+
+                Console.WriteLine("hello world");
+                Console.WriteLine(process.StandardOutput.ReadToEnd());
+                Console.WriteLine(process.StandardError.ReadToEnd());
+
+                if (process.ExitCode != 0) 
+                {
+                    Console.Clear();
+                    AnsiConsole.MarkupLine("[red]Failed to access tunnel![/]");
+                    Environment.Exit(0);
+                    return;
+                }
+            }   
+            catch (Exception) 
+            {   
+                Console.Clear();
+                AnsiConsole.MarkupLine("[red]Invalid Network.[/]");
+                Environment.Exit(0);
+                return;
+            }
+
+        }
+
+        static string? Prerequisites() {
+
+            Process process;
+            string? token = null;
             bool prerequisites = true;
-                        
+
             AnsiConsole.Status()
                 .Start("Checking for updates...", ctx => 
                 {
@@ -125,23 +147,32 @@ namespace CubeClient
                     AnsiConsole.MarkupLine("[grey]Updating tunnels...[/]");
                     
                     // tunnel tokens from csqb-api
-                    string token = FetchToken();
+                    token = FetchToken();
+
+                    if (token == null) 
+                    {
+                        Console.Clear();
+                        AnsiConsole.MarkupLine("[red]Failed to update tunnels![/]");
+                        prerequisites = false;
+                        return;
+                    }
 
                     // get the first line of the string of the token
                     token = Token.Rot13(token.Split("\n")[0]);
 
                     AnsiConsole.MarkupLine("[green]Tunnels updated successfully![/]");
                     AnsiConsole.MarkupLine("[grey]Requesting access...[/]");
-                    ctx.Status("Verifying environment...");     
-
+                    
+                    ctx.Status("Connecting to proxy network...");     
+                    ctx.Spinner(Spinner.Known.BouncingBar);
+                    ctx.SpinnerStyle(Style.Parse("deepskyblue2"));
+                    
                     try 
                     { // zrok params check
                         process = ProxyConfig.Execute($"enable {token[..12]} --headless");
 
                         if (process.ExitCode != 0) 
                         { // zrok process check
-                            Error(process);
-                            
                             AnsiConsole.MarkupLine("[orange1]Attempting restart..[/]");
                             AnsiConsole.MarkupLine("[grey]Clearing Cache...[/]");    
                             
@@ -154,6 +185,7 @@ namespace CubeClient
 
                             if (process.ExitCode != 0) 
                             { // zrok process check
+                                Console.Clear();
                                 AnsiConsole.MarkupLine("[red]Failed to enable environment![/]");
                                 prerequisites = false;
                                 return;
@@ -163,59 +195,35 @@ namespace CubeClient
 
                     catch (Exception) 
                     {
-                        AnsiConsole.MarkupLine("[red]Invalid parameters.[/]");
+                        Console.Clear();
+                        AnsiConsole.MarkupLine("[red]Invalid Network.[/]");
                         prerequisites = false;
                         return;
                     }
-
-                    AnsiConsole.MarkupLine("[green]Environment linked successfully![/]");            
-                    AnsiConsole.MarkupLine("[grey]Started proxying to server[/]");
-                    
-                    ctx.Status("Accessing Minecraft tunnel...");
-                    ctx.Spinner(Spinner.Known.BouncingBar);
-                    ctx.SpinnerStyle(Style.Parse("orange1"));
-
-                    try 
-                    { // zrok params check
-                        
-                        string test = $"access private {token[12..24]} --bind {minecraftTunnel[1]}:{minecraftTunnel[2]} --headless";
-                        AnsiConsole.MarkupLine(test);
-                        process = ProxyConfig.Execute(test);
-
-                        if (process.ExitCode != 0) 
-                        { // zrok process check
-                            Error(process);
-                            AnsiConsole.MarkupLine("[red]Failed to access Minecraft tunnel![/]");
-                            prerequisites = false;  
-                            return;
-                        }
-                    }
-                    catch (Exception) 
-                    {
-                        AnsiConsole.MarkupLine("[red]Failed to access Minecraft tunnel![/]");
-                        prerequisites = false;
-                        return;
-                    }
-
-                    AnsiConsole.MarkupLine("[green]Minecraft tunnel accessed successfully![/]");
-
-
                 }
             );
 
-            if (!prerequisites) Quit();
+            Layout();   
+            
+            if (token == null || !prerequisites) 
+            {
+                Console.Clear();    
+                AnsiConsole.MarkupLine("[red]Invalid Network.[/]");
+                return null;
+            }
+
+            return token;
         }
 
 
-        static string FetchToken() {
+        static string? FetchToken() {
             var tunnel = Token.Fetch(
                 "https://raw.githubusercontent.com/CS3-USTP/CSQB-API/main/tunnels.txt");
 
             if (tunnel == null) 
             {
                 AnsiConsole.MarkupLine("[red]Failed to fetch tokens![/]");
-                Console.ReadLine();
-                Environment.Exit(0);
+                return null;
             }
 
             /* Group 1 Decryption */
@@ -232,6 +240,8 @@ namespace CubeClient
         
         static void Layout() 
         {
+            Console.Clear();
+
             // Left section with banner and about information
             var leftSection = new Layout("Left").Update(
                 new Panel(
