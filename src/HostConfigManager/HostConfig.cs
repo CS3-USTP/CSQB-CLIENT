@@ -1,5 +1,8 @@
 
 
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+
 namespace HostConfigManager
 {
     public static class HostConfig
@@ -8,8 +11,8 @@ namespace HostConfigManager
 
         private static readonly Dictionary<string, string> serverHost = new()
         {
-            {"minecraft", "127.0.69.0  mc.csqb.org"},
-            {"web",       "127.0.69.1  csqb.org"}
+            {"minecraft", "127.0.69.0  mc.csqb.org  25565"},
+            {"web",       "127.0.69.1  csqb.org     80"}
         };
 
         public static Dictionary<string, string> ServerHost
@@ -73,7 +76,6 @@ namespace HostConfigManager
                 // Console.WriteLine($"Entry \"{entry}\" not found in hosts file.");
             }
         }
-        
 
     }
 }
