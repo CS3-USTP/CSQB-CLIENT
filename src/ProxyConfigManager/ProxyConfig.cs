@@ -5,9 +5,7 @@ namespace ProxyConfigManager
 {
     public class ProxyConfig
     {
-    
-        // TODO: On deployment, update path of executables
-        static readonly string execPath = "C:/Users/LENOVO/Desktop/CSQB-CLIENT/bin/CubeProxy.exe";
+        static readonly string execPath = "CubeProxy.exe";
 
         public static void Remove()
         {

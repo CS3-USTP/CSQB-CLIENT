@@ -5,19 +5,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Client</AssemblyName>
+    <AssemblyName>HostManager</AssemblyName>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>False</SelfContained>    
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Spectre.Console" Version="0.49.1" />
-  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="HostConfig">
       <HintPath>C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\HostConfigManager\bin\Release\net8.0\publish\HostConfig.dll</HintPath>
-    </Reference>
-    <Reference Include="ProxyConfig">
-      <HintPath>C:\Users\LENOVO\Desktop\CSQB-CLIENT\src\ProxyConfigManager\bin\Release\net8.0\publish\ProxyConfig.dll</HintPath>
     </Reference>
   </ItemGroup>
 

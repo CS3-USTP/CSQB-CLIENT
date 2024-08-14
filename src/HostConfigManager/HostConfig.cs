@@ -1,7 +1,5 @@
-
-
 using System.Diagnostics;
-using System.Text.RegularExpressions;
+using System.Security.Principal;
 
 namespace HostConfigManager
 {
@@ -19,17 +17,36 @@ namespace HostConfigManager
         {
             get { return serverHost; }
         }
-        
-        public static void IncludeServerHost() {
-            foreach (string entry in serverHost.Values) {
+
+        public static void IncludeServerHost()
+        {
+            foreach (string entry in serverHost.Values)
+            {
                 AddEntryToHosts(entry);
             }
         }
 
-        public static void ExcludeServerHost() {
-            foreach (string entry in serverHost.Values) {
+        public static void ExcludeServerHost()
+        {
+            foreach (string entry in serverHost.Values)
+            {
                 RemoveEntryFromHosts(entry);
             }
+        }
+
+        public static bool CheckAllHostsExist()
+        {
+            string hostsContent = File.ReadAllText(hostsPath);
+
+            foreach (string entry in serverHost.Values)
+            {
+                if (!hostsContent.Contains(entry))
+                {
+                    return false; // Return false if any entry is missing
+                }
+            }
+
+            return true; // All entries exist
         }
 
         private static void AddEntryToHosts(string entry)
@@ -39,43 +56,27 @@ namespace HostConfigManager
             if (!hostsContent.Contains(entry))
             {
                 File.AppendAllText(hostsPath, Environment.NewLine + entry);
-                // Console.WriteLine($"Entry \"{entry.Split()[1]}\" added to hosts file.");
-            }
-            else
-            {
-                // Console.WriteLine($"Entry \"{entry.Split()[1]}\" already exists in hosts file.");
             }
         }
 
         private static void RemoveEntryFromHosts(string entry)
         {
             string[] lines = File.ReadAllLines(hostsPath);
-            bool found = false;
+            // bool found = false;
 
-            using (StreamWriter writer = new(hostsPath))
+            using StreamWriter writer = new(hostsPath);
+            foreach (string line in lines)
             {
-                foreach (string line in lines)
+                if (line.Trim() != entry)
                 {
-                    if (line.Trim() != entry)
-                    {
-                        writer.WriteLine(line);
-                    }
-                    else
-                    {
-                        found = true;
-                    }
+                    writer.WriteLine(line);
                 }
-            }
-
-            if (found)
-            {
-                // Console.WriteLine($"Entry \"{entry.Split()[1]}\" removed from hosts file.");
-            }
-            else
-            {
-                // Console.WriteLine($"Entry \"{entry}\" not found in hosts file.");
+                // else
+                // {
+                //     found = true;
+                // }
             }
         }
-
+        
     }
 }
