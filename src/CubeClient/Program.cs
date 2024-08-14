@@ -89,9 +89,8 @@ namespace CubeClient
         static void ClearCache() {
 
             ProxyConfig.Execute("disable");
-            ProxyConfig.KillProxyProcesses();
             ProxyConfig.Remove();
-            
+            ProxyConfig.KillProxyProcesses();
         }
 
         static void Setup() 
@@ -107,17 +106,16 @@ namespace CubeClient
             try {
                 
                 process = ProxyConfig.Execute(
-                    $"access private {token[12..24]} --bind {minecraftHost[1]}:{minecraftHost[2]} --headless --panic"
+                    $"access private {token[12..24]} --bind {minecraftHost[1]}:{minecraftHost[2]} --headless"
                 );
 
-                Console.WriteLine("hello world");
-                Console.WriteLine(process.StandardOutput.ReadToEnd());
-                Console.WriteLine(process.StandardError.ReadToEnd());
 
                 if (process.ExitCode != 0) 
                 {
-                    Console.Clear();
-                    AnsiConsole.MarkupLine("[red]Failed to access tunnel![/]");
+                    Console.Clear();                    
+                    Console.WriteLine(process.StandardOutput.ReadToEnd());
+                    Console.WriteLine(process.StandardError.ReadToEnd());
+                    AnsiConsole.MarkupLine("orange1]Tunnels have been refreshed, try again in a few minutes...[/]");
                     Environment.Exit(0);
                     return;
                 }
@@ -141,6 +139,29 @@ namespace CubeClient
             AnsiConsole.Status()
                 .Start("Checking for updates...", ctx => 
                 {
+
+                    process = new()
+                    {
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = "HostManager.exe",
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,  
+                            UseShellExecute = false,
+                            CreateNoWindow = true
+                        }
+                    };
+
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
+                    {
+                        Console.Clear();
+                        AnsiConsole.MarkupLine("[red]Failed to update domains![/]");
+                        return;
+                    }
+
                     ctx.Spinner(Spinner.Known.Dots);
                     ctx.SpinnerStyle(Style.Parse("blue"));
                     AnsiConsole.MarkupLine("[grey]Updating tunnels...[/]");
@@ -202,14 +223,9 @@ namespace CubeClient
                 }
             );
 
+            if (token == null || !prerequisites) return null;
+
             Layout();   
-            
-            if (token == null || !prerequisites) 
-            {
-                Console.Clear();    
-                AnsiConsole.MarkupLine("[red]Invalid Network.[/]");
-                return null;
-            }
 
             return token;
         }
